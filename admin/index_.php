@@ -18,7 +18,7 @@ $_SESSION["page"] = $_GET["page"] ?? "accueil.php";
 <main id="main_admin">
     <section id="contenu">
         <?php
-        // Gestion de l'affichage des pages
+
         if (!isset($_SESSION['admin'])) {
             $path = "content/login.php";
         } else {
@@ -37,5 +37,6 @@ $_SESSION["page"] = $_GET["page"] ?? "accueil.php";
 </main>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/fonctionsJquery.js"></script>
 </body>
 </html>
