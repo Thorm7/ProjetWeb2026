@@ -1,4 +1,2 @@
-<h1>Accueil Administration</h1>
-<p>Bienvenue dans le back-office LivreDVD.</p>
-<?php
-var_dump($cnx);
+<h1>Tableau de bord</h1>
+<p>Bienvenue dans l'administration de LivreDVD.</p>
