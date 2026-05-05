@@ -2,8 +2,7 @@
 session_start();
 require "src/php/utils/all_includes.php";
 
-// Page par défaut
-$_SESSION["page"] = $_GET["page"] ?? "accueil.php";
+$_SESSION["page"] = $_GET["page"] ?? $_SESSION["page"] ?? "accueil.php";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -12,6 +11,7 @@ $_SESSION["page"] = $_GET["page"] ?? "accueil.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administration LivreDVD</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -24,6 +24,9 @@ $_SESSION["page"] = $_GET["page"] ?? "accueil.php";
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="content/disconnect.php">Déconnexion</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index_.php?page=gestion_produits.php">Gestion produits</a>
                 </li>
             </ul>
         </div>
@@ -50,5 +53,6 @@ $_SESSION["page"] = $_GET["page"] ?? "accueil.php";
 </main>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/fonctionsJquery.js"></script>
 </body>
 </html>

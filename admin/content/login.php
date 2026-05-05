@@ -1,5 +1,5 @@
 <?php
-// Traitement du formulaire
+
 if (isset($_GET['submit'])) {
     extract($_GET, EXTR_OVERWRITE);
     if (!empty($login) && !empty($password)) {
@@ -7,7 +7,7 @@ if (isset($_GET['submit'])) {
         $adm = $admin->getAdmin($login, $password);
         if ($adm != null) {
             $_SESSION['admin'] = 1;
-            $_SESSION['page'] = "accueil.php"; // page par défaut
+            $_SESSION['page'] = "accueil.php";
             header("location: ./index_.php?page=accueil.php");
             exit();
         } else {

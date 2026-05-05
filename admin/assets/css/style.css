@@ -83,3 +83,6 @@ img  { max-width: 100%; display: block; }
 @media (max-width: 480px) {
     .produits-grid { grid-template-columns: 1fr; }
 }
+#ajout_nouveau {
+    display: none;
+}

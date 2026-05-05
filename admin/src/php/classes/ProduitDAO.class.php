@@ -1,13 +1,13 @@
 <?php
-
 class ProduitDAO
 {
     private PDO $_cnx;
 
-    public function __construct(PDO $cnx)
+    public function __construct(PDO $_cnx)
     {
-        $this->_cnx = $cnx;
+        $this->_cnx = $_cnx;
     }
+
 
     public function getAllProduits(): array
     {
@@ -57,6 +57,71 @@ class ProduitDAO
         } catch (PDOException $e) {
             print $e->getMessage();
             return [];
+        }
+    }
+
+    public function effacerProduit($id_produit)
+    {
+        $query = "select effacer_produit(:id_produit) as retour";
+        try {
+            $this->_cnx->beginTransaction();
+            $stmt = $this->_cnx->prepare($query);
+            $stmt->bindValue(':id_produit', $id_produit);
+            $stmt->execute();
+            $data = $stmt->fetchColumn(0);
+            $this->_cnx->commit();
+            return $data;
+        } catch (PDOException $e) {
+            $this->_cnx->rollBack();
+            print "<br>Echec de la suppression " . $e->getMessage();
+        }
+    }
+
+    public function updateChampProduit($champ, $nouveau, $id_produit)
+    {
+        $query = "select update_champ_produit(:champ,:nouveau,:id_produit) as retour";
+        try {
+            $this->_cnx->beginTransaction();
+            $stmt = $this->_cnx->prepare($query);
+            $stmt->bindValue(':champ', $champ);
+            $stmt->bindValue(':nouveau', $nouveau);
+            $stmt->bindValue(':id_produit', $id_produit);
+            $stmt->execute();
+            $data = $stmt->fetchColumn(0);
+            $this->_cnx->commit();
+            if (!$data) {
+                return null;
+            }
+            return $data;
+        } catch (PDOException $e) {
+            $this->_cnx->rollBack();
+            print "<br>Echec de la mise à jour - " . $e->getMessage();
+        }
+    }
+
+    public function addProduit($nom, $stock, $prix, $description, $type, $image, $id_categorie)
+    {
+        $query = "select ajout_produit(:nom, :description, :prix, :stock, :image, :type, :id_categorie) as retour";
+        try {
+            $this->_cnx->beginTransaction();
+            $stmt = $this->_cnx->prepare($query);
+            $stmt->bindValue(':nom', $nom);
+            $stmt->bindValue(':description', $description);
+            $stmt->bindValue(':prix', $prix);
+            $stmt->bindValue(':stock', $stock, PDO::PARAM_INT);
+            $stmt->bindValue(':image', $image);
+            $stmt->bindValue(':type', $type);
+            $stmt->bindValue(':id_categorie', $id_categorie, PDO::PARAM_INT);
+            $stmt->execute();
+            $data = $stmt->fetchColumn(0);
+            $this->_cnx->commit();
+            if(!$data){
+                return null;
+            }
+            return $data;
+        }catch(PDOException $e){
+            $this->_cnx->rollBack();
+            print "<br>Echec de l'insertion - ".$e->getMessage();
         }
     }
 }
