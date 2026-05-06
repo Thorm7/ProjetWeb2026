@@ -1,11 +1,16 @@
 <?php
 session_start();
 require "admin/src/php/utils/all_includes.php";
+$total_panier = 0;
+if (isset($_SESSION['panier'])) {
+    foreach ($_SESSION['panier'] as $item) {
+        $total_panier += $item['quantite'];
+    }
+}
 
 $_SESSION["page"] = $_GET["page"] ?? "accueil";
 
-$pages = ['accueil', 'compte', 'page404'];
-if (!in_array($_SESSION["page"], $pages)) {
+$pages = ['accueil', 'compte', 'page404', 'detail', 'panier', 'login_client', 'logout_client', 'valider', 'confirmer'];if (!in_array($_SESSION["page"], $pages)) {
     $_SESSION["page"] = 'accueil';
 }
 ?>
@@ -27,22 +32,34 @@ if (!in_array($_SESSION["page"], $pages)) {
         <a href="index_.php">LivreDVD</a>
     </div>
     <div class="navbar__search">
-        <input type="text" placeholder="Recherche un livre, DVD...">
-        <div class="search-dropdown"></div>
+        <input type="text" id="search-input" placeholder="Recherche un livre, DVD...">
+        <div id="search-results" class="search-results" style="display:none;"></div>
     </div>
     <div class="navbar__icons">
-        <a href="index_.php?page=compte"><i class="fa-solid fa-user"></i> Compte</a>
-        <a href="#"><i class="fa-solid fa-cart-shopping"></i> Panier</a>
+        <?php if (isset($_SESSION['client'])): ?>
+            <a href="index_.php?page=compte">Mon compte</a>
+            <a href="index_.php?page=logout_client">Déconnexion</a>
+        <?php else: ?>
+            <a href="index_.php?page=login_client">Connexion</a>
+        <?php endif; ?>
+        <a class="nav-link" href="index_.php?page=panier">
+            <i class="fa-solid fa-cart-shopping"></i> Panier <span id="cart-count" class="badge bg-danger"><?= $total_panier ?></span>
+        </a>
     </div>
 </nav>
 
 
 <div class="categories-bar">
-    <a href="#">Tous</a>
-    <a href="#">Science-Fiction</a>
-    <a href="#">Romans</a>
-    <a href="#">Jeunesse</a>
-    <a href="#">DVD</a>
+    <a href="index_.php?page=accueil" class="<?= !isset($_GET['categorie']) ? 'active' : '' ?>">Tous</a>
+    <?php
+    $categorieDAO = new CategorieDAO($cnx);
+    $categories = $categorieDAO->getAllCategories();
+    foreach ($categories as $cat): ?>
+        <a href="index_.php?page=accueil&categorie=<?= $cat->id_categorie ?>"
+           class="<?= (isset($_GET['categorie']) && $_GET['categorie'] == $cat->id_categorie) ? 'active' : '' ?>">
+            <?= $cat->nom_categorie ?>
+        </a>
+    <?php endforeach; ?>
 </div>
 
 

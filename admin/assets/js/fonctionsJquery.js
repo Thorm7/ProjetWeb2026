@@ -139,4 +139,109 @@ $(document).ready(function () {
     $('#nom').blur(function () {
         $('#saisie').text("Bonjour " + $(this).val());
     });
+
+    //Test a supprimer
+    console.log('JS chargé panier');
+    $(document).on('click', '#ajouterPanier', function() {
+        console.log('Clic sur le bouton panier');
+    });
+    // aJout au panier
+    $(document).on('click', '#ajouterPanier', function() {
+        var id = $(this).data('id');
+        $.ajax({
+            url: 'admin/src/php/ajax/ajaxAddToCart.php',
+            type: 'GET',
+            data: { id_produit: id },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    $('#cart-count').text(response.total_articles);
+                    alert('Ajouté au panier');
+                } else {
+                    alert(response.message);
+                }
+            }
+
+        });
+    });
+    $(document).on('click', '.btn-supprimer-panier', function() {
+        var id = $(this).data('id');
+        var ligne = $(this).closest('tr');
+        $.ajax({
+            url: 'admin/src/php/ajax/ajaxRemoveFromCart.php',
+            type: 'GET',
+            data: { id_produit: id },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    ligne.remove();
+                    $('#cart-count').text(response.total_articles);
+                    $('#total-panier').text(response.total_panier);
+                }
+            }
+        });
+    });
+    $(document).on('click', '.btn-plus, .btn-moins', function() {
+        var $btn = $(this);
+        var id = $btn.data('id');
+        var $qteSpan = $btn.siblings('.qte-texte');
+        var qte = parseInt($qteSpan.text());
+        var delta = $btn.hasClass('btn-plus') ? 1 : -1;
+        var nouvelleQte = qte + delta;
+        if (nouvelleQte < 1) return;
+        $.ajax({
+            url: 'admin/src/php/ajax/ajaxUpdateCartQuantity.php',
+            type: 'GET',
+            data: { id_produit: id, quantite: nouvelleQte },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    $qteSpan.text(response.quantite);
+                    $('#cart-count').text(response.total_articles);
+                    $('#total-panier').text(response.total_panier);
+                    $btn.closest('tr').find('td:nth-child(5)').text(response.sous_total);
+                }
+            }
+        });
+    });
+    // Recherche
+    var searchTimeout;
+    $('#search-input').on('input', function() {
+        var query = $(this).val().trim();
+        if (query.length < 1) {
+            $('#search-results').hide().empty();
+            return;
+        }
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            $.ajax({
+                url: 'admin/src/php/ajax/ajaxSearchProduits.php',
+                type: 'GET',
+                data: { q: query },
+                dataType: 'json',
+                success: function(produits) {
+                    $('#search-results').empty();
+                    if (produits.length > 0) {
+                        produits.forEach(function(p) {
+                            var html = '<a href="index_.php?page=detail&id=' + p.id_produit + '">' +
+                                '<img src="' + (p.image_url || 'https://via.placeholder.com/40x55') + '" alt="">' +
+                                '<div><strong>' + p.nom_produit + '</strong><br><small>' + p.prix + ' €</small></div>' +
+                                '</a>';
+                            $('#search-results').append(html);
+                        });
+                        $('#search-results').show();
+                    } else {
+                        $('#search-results').html('<div class="p-2">Aucun résultat</div>').show();
+                    }
+                }
+            });
+        }, 300);
+    });
+
+    // Cacher les résultats si on clique ailleurs
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#search-input, #search-results').length) {
+            $('#search-results').hide();
+        }
+    });
 });

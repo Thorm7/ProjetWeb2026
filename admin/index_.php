@@ -14,30 +14,33 @@ $_SESSION["page"] = $_GET["page"] ?? $_SESSION["page"] ?? "accueil.php";
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="index_.php">Admin LivreDVD</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="index_.php?page=accueil.php">Accueil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="content/disconnect.php">Déconnexion</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index_.php?page=gestion_produits.php">Gestion produits</a>
-                </li>
-            </ul>
+<?php if (!isset($_SESSION['admin'])): ?>
+    <?php include "content/login.php"; ?>
+<?php else: ?>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index_.php">Admin LivreDVD</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index_.php?page=accueil.php">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="content/disconnect.php">Déconnexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index_.php?page=gestion_produits.php">Gestion produits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index_.php">Retour au site</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
-<main id="main_admin">
-    <section id="contenu">
-        <?php
-        if (!isset($_SESSION['admin'])) {
-            include "content/login.php";
-        } else {
+    </nav>
+    <main id="main_admin">
+        <section id="contenu">
+            <?php
             if (isset($_GET["page"])) {
                 $_SESSION["page"] = $_GET["page"];
             }
@@ -47,10 +50,10 @@ $_SESSION["page"] = $_GET["page"] ?? $_SESSION["page"] ?? "accueil.php";
             } else {
                 include "content/page404.php";
             }
-        }
-        ?>
-    </section>
-</main>
+            ?>
+        </section>
+    </main>
+<?php endif; ?>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/fonctionsJquery.js"></script>

@@ -124,4 +124,78 @@ class ProduitDAO
             print "<br>Echec de l'insertion - ".$e->getMessage();
         }
     }
+    public function getProduitById(int $id): ?Produit
+    {
+        $query = "SELECT * FROM produit WHERE id_produit = :id";
+        try {
+            $stmt = $this->_cnx->prepare($query);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$data) return null;
+            return new Produit(
+                id_produit: (int)$data['id_produit'],
+                nom_produit: $data['nom_produit'],
+                description: $data['description'],
+                prix: (float)$data['prix'],
+                stock: (int)$data['stock'],
+                image_url: $data['image_url'] ?? '',
+                type_produit: $data['type_produit'],
+                id_categorie: (int)$data['id_categorie']
+            );
+        } catch (PDOException $e) {
+            print $e->getMessage();
+            return null;
+        }
+    }
+    public function getProduitsByCategorie(int $id_categorie): array
+    {
+        $query = "SELECT * FROM produit WHERE id_categorie = :id_categorie ORDER BY id_produit DESC";
+        try {
+            $stmt = $this->_cnx->prepare($query);
+            $stmt->bindValue(':id_categorie', $id_categorie, PDO::PARAM_INT);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return array_map(function($d) {
+                return new Produit(
+                    id_produit: (int)$d['id_produit'],
+                    nom_produit: $d['nom_produit'],
+                    description: $d['description'],
+                    prix: (float)$d['prix'],
+                    stock: (int)$d['stock'],
+                    image_url: $d['image_url'] ?? '',
+                    type_produit: $d['type_produit'],
+                    id_categorie: (int)$d['id_categorie']
+                );
+            }, $data);
+        } catch (PDOException $e) {
+            print $e->getMessage();
+            return [];
+        }
+    }
+    public function searchProduits(string $q): array
+    {
+        $query = "SELECT * FROM produit WHERE nom_produit ILIKE :q ORDER BY id_produit DESC";
+        try {
+            $stmt = $this->_cnx->prepare($query);
+            $stmt->bindValue(':q', '%' . $q . '%');
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return array_map(function($d) {
+                return new Produit(
+                    id_produit: (int)$d['id_produit'],
+                    nom_produit: $d['nom_produit'],
+                    description: $d['description'],
+                    prix: (float)$d['prix'],
+                    stock: (int)$d['stock'],
+                    image_url: $d['image_url'] ?? '',
+                    type_produit: $d['type_produit'],
+                    id_categorie: (int)$d['id_categorie']
+                );
+            }, $data);
+        } catch (PDOException $e) {
+            print $e->getMessage();
+            return [];
+        }
+    }
 }
