@@ -20,4 +20,22 @@ class CommandeDAO {
         $stmt->bindValue(':prix', $prix);
         $stmt->execute();
     }
+    public function getCommandesByUser(int $idUser): array
+    {
+        $query = "SELECT p.id_panier, p.statut, c.id_produit, c.quantite, c.prix_achat_u, pr.nom_produit, pr.image_url
+              FROM panier p
+              JOIN contient c ON p.id_panier = c.id_panier
+              JOIN produit pr ON c.id_produit = pr.id_produit
+              WHERE p.id_user = :idUser AND p.statut = 'commandé'
+              ORDER BY p.id_panier DESC, c.id_produit";
+        try {
+            $stmt = $this->_cnx->prepare($query);
+            $stmt->bindValue(':idUser', $idUser, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            print $e->getMessage();
+            return [];
+        }
+    }
 }

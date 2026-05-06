@@ -79,13 +79,13 @@ class ProduitDAO
 
     public function updateChampProduit($champ, $nouveau, $id_produit)
     {
-        $query = "select update_champ_produit(:champ,:nouveau,:id_produit) as retour";
+        $query = "select update_champ_produit(:id, :champ, :nouveau) as retour";
         try {
             $this->_cnx->beginTransaction();
             $stmt = $this->_cnx->prepare($query);
+            $stmt->bindValue(':id', $id_produit, PDO::PARAM_INT);
             $stmt->bindValue(':champ', $champ);
             $stmt->bindValue(':nouveau', $nouveau);
-            $stmt->bindValue(':id_produit', $id_produit);
             $stmt->execute();
             $data = $stmt->fetchColumn(0);
             $this->_cnx->commit();

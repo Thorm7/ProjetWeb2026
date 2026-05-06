@@ -24,7 +24,7 @@ BEGIN
         RETURN 0;
     END IF;
 
-    nb := ROW_COUNT;
+    GET DIAGNOSTICS nb = ROW_COUNT;
     RETURN nb;
 END;
 ' LANGUAGE plpgsql;

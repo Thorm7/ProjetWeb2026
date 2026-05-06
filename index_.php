@@ -1,6 +1,7 @@
 <?php
-session_start();
+
 require "admin/src/php/utils/all_includes.php";
+session_start();
 $total_panier = 0;
 if (isset($_SESSION['panier'])) {
     foreach ($_SESSION['panier'] as $item) {

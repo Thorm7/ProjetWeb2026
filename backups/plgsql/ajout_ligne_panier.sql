@@ -3,6 +3,9 @@ RETURNS INT AS '
 BEGIN
     INSERT INTO contient (id_panier, id_produit, quantite, prix_achat_u)
     VALUES (p_id_panier, p_id_produit, p_quantite, p_prix);
+
+    UPDATE produit SET stock = stock - p_quantite WHERE id_produit = p_id_produit;
+
     RETURN 1;
 END;
 ' LANGUAGE plpgsql;

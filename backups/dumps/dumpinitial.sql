@@ -91,7 +91,7 @@ ALTER TABLE IF EXISTS public.livraison
 CREATE TABLE IF NOT EXISTS public.panier
 (
     id_panier integer NOT NULL DEFAULT nextval('panier_id_panier_seq'::regclass),
-    id_user integer NOT NULL,
+    id_user integer NULL,
     statut character varying(20) COLLATE pg_catalog."default" NOT NULL DEFAULT 'ouvert'::character varying,
     CONSTRAINT panier_pkey PRIMARY KEY (id_panier),
     CONSTRAINT panier_id_user_fkey FOREIGN KEY (id_user)

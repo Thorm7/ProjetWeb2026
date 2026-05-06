@@ -32,8 +32,11 @@ $_SESSION["page"] = $_GET["page"] ?? $_SESSION["page"] ?? "accueil.php";
                         <a class="nav-link" href="index_.php?page=gestion_produits.php">Gestion produits</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="index_.php?page=gestion_utilisateurs.php">Gestion utilisateurs</a>                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="../index_.php">Retour au site</a>
                     </li>
+
                 </ul>
             </div>
         </div>

@@ -20,6 +20,7 @@ if (!isset($_SESSION['panier'])) {
                 <th>Action</th>
             </tr>
             </thead>
+            <a href="index_.php?page=valider" class="btn btn-success">Passer commande</a>
             <tbody>
             <?php $total = 0; ?>
             <?php foreach ($_SESSION['panier'] as $id => $item): ?>
