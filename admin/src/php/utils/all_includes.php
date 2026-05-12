@@ -4,7 +4,7 @@ $isAdmin = str_contains($_SERVER['REQUEST_URI'], 'admin');
 if ($isAdmin) {
     $pathDb = 'src/php/db/db_pg_connect.php';
     $pathAutoloader = 'src/php/classes/Autoloader.class.php';
-    if(!file_exists($pathDb)){ //depuis dossier ajax
+    if(!file_exists($pathDb)){
         $pathDb = '../db/db_pg_connect.php';
         $pathAutoloader = '../classes/Autoloader.class.php';
     }

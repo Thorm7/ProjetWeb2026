@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    // ========== INSCRIPTION UTILISATEUR ==========
+    // Inscription user
     $('#formulaire_utilisateur').on('submit', function (e) {
         e.preventDefault();
         var email = $('#email').val();
@@ -46,10 +46,26 @@ $(document).ready(function () {
         });
     });
 
-    // ========== ÉDITION INLINE DES PRODUITS ==========
-    // Initialisation de la valeur d'origine
+    // Edition produit
     $('td[contenteditable=true]').each(function() {
         $(this).data('ancien', $(this).text().trim());
+    });
+
+    $('td[data-champ="type_produit"] select, td[data-champ="id_categorie"] select').on('change', function () {
+        var cellule = $(this).closest('td');
+        var id = cellule.attr('id');
+        var champ = cellule.data('champ');
+        var nouveau = $(this).val();
+
+        $.ajax({
+            url: 'src/php/ajax/ajaxUpdateChampProduit.php',
+            type: 'GET',
+            data: { champ: champ, nouveau: nouveau, id_produit: id },
+            dataType: 'json',
+            success: function (data) {
+                console.log("success " + data);
+            }
+        });
     });
 
     $('td[contenteditable=true]').on('blur', function () {
@@ -99,7 +115,7 @@ $(document).ready(function () {
         $('#ajout_nouveau').show();
     });
 
-    // ========== PANIER ==========
+    // Panier
     $(document).on('click', '#ajouterPanier', function() {
         var id = $(this).data('id');
         $.ajax({
@@ -160,14 +176,11 @@ $(document).ready(function () {
         });
     });
 
-    // ========== RECHERCHE ASYNCHRONE ==========
+    // Recherche
     var searchTimeout;
     $('#search-input').on('input', function() {
         var query = $(this).val().trim();
-        if (query.length < 1) {
-            $('#search-results').hide().empty();
-            return;
-        }
+
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(function() {
             $.ajax({
@@ -201,8 +214,7 @@ $(document).ready(function () {
         }
     });
 
-    // ========== GESTION UTILISATEURS (ADMIN) ==========
-    // Changement de rôle
+    // Gestion des users (admin)
     $(document).on('change', '.role-select', function() {
         var select = $(this);
         var id = select.closest('tr').data('id');
@@ -222,7 +234,7 @@ $(document).ready(function () {
         });
     });
 
-    // Suppression d'un utilisateur (UN SEUL GESTIONNAIRE)
+    // Suppression d'un utilisateur
     $(document).on('click', '.btn-supprimer-user', function() {
         var ligne = $(this).closest('tr');
         var id = ligne.data('id');
@@ -243,7 +255,7 @@ $(document).ready(function () {
         }
     });
 
-    // ========== EXERCICES JQUERY (à conserver ou supprimer) ==========
+
     $('#options').hide();
     $('#en_couleur').click(function () {
         if ($(this).hasClass('bleu')) {
@@ -271,14 +283,5 @@ $(document).ready(function () {
         } else {
             $('#options').slideDown('slow');
         }
-    });
-    $('#image').click(function () {
-        $('#image2').html("<img src='assets/images/cake2.jpg' alt='autre image'>");
-    });
-    $('#image').mouseover(function () {
-        $(this).attr("src", "assets/images/cake3.jpg");
-    });
-    $('#nom').blur(function () {
-        $('#saisie').text("Bonjour " + $(this).val());
     });
 });

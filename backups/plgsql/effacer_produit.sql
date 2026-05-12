@@ -3,7 +3,7 @@ DECLARE
     nb int;
 BEGIN
     DELETE FROM produit WHERE id_produit = p_id_produit;
-    nb := ROW_COUNT;
+    GET DIAGNOSTICS nb = ROW_COUNT;
     RETURN nb;
 END;
 ' LANGUAGE plpgsql;
